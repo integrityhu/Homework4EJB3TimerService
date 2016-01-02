@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions">
+        <h:form id="eventForm" name="eventForm" method="post">
+            <p:dialog widgetVar="eventDialog" modal="true"
+                header="Esemény részletei" showEffect="fade" hideEffect="fade">
+                <h:panelGrid id="eventDetails" columns="2"
+                    styleClass="eventDetailsClass" columnClasses="nameClass,valueClass">
+                    <h:outputLabel for="title" value="Esemény neve:" />
+                    <p:inputText id="title"
+                        value="#{scheduleManager.eventInfo.title}"
+                        required="true" />
+
+                    <h:outputLabel for="from" value="Kezdőd nap:" />
+                    <p:calendar id="from"
+                        value="#{scheduleManager.eventInfo.eventStart}"
+                        showOn="button" locale="hu" showButtonPanel="true"
+                        navigator="true" pattern="yyyy.MM.dd. HH:mm" />
+
+                    <h:outputLabel for="to" value="Utolsó nap:" />
+                    <p:calendar id="to"
+                        value="#{scheduleManager.eventInfo.eventEnd}"
+                        showOn="button" locale="hu" showButtonPanel="true"
+                        navigator="true" pattern="yyyy.MM.dd. HH:mm" />
+
+                    <h:outputLabel for="to" value="Üzenet:" />
+                    <p:editor id="message" widgetVar="msgeditor"
+                        controls="bold italic underline strikethrough subscript superscript | font size style | color highlight removeformat | bullets numbering | outdent indent | alignleft center alignright justify | undo redo | rule image link unlink | cut copy paste pastetext"
+                        value="#{scheduleManager.eventInfo.message}" />
+
+                    <h:outputLabel for="to" value="Emlékeztető:" />
+                    <p:selectOneRadio
+                        value="#{scheduleManager.eventInfo.rememberFrequency}"
+                        id="remainderFrequency">
+                        <f:selectItem itemLabel="Aznap" itemValue="0" />
+                        <f:selectItem itemLabel="1 nappal előtte" itemValue="1" />
+                        <f:selectItem itemLabel="2 nappal előtte" itemValue="2" />
+                        <f:selectItem itemLabel="3 naponta" itemValue="3" />
+                        <f:selectItem itemLabel="7 naponta" itemValue="7" />
+                        <f:selectItem itemLabel="14 naponta" itemValue="14" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel for="to" value="Ismétlés:" />
+                    <p:selectOneRadio
+                        value="#{scheduleManager.eventInfo.frequency}"
+                        id="frequency">
+                        <f:selectItem itemLabel="Nincs ismétlés" itemValue="0" />
+                        <f:selectItem itemLabel="Naponta" itemValue="1" />
+                        <f:selectItem itemLabel="Hetente" itemValue="7" />
+                        <f:selectItem itemLabel="Havonta" itemValue="31" />
+                        <f:selectItem itemLabel="Évente" itemValue="365" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel for="allDay" value="Egész napos:" />
+                    <p:selectBooleanCheckbox id="allDay"
+                        value="#{scheduleManager.eventInfo.allDay}" />
+
+                    <h:outputLabel for="enabledEvent" value="Engedélyezve:" />
+                    <p:selectBooleanCheckbox id="enabledEvent"
+                        value="#{scheduleManager.eventInfo.enabled}" />
+
+                    <p:commandButton value="Mentés"
+                        actionListener="#{scheduleManager.createEvent}"
+                         oncomplete="PF('eventDialog').hide();"/> <!-- update=":scheduleTable:messages" -->
+                    <p:commandButton value="Törlés"
+                        onstart="return confirm('Biztos törlöd az eseményt?');"
+                        disabled="#{scheduleManage.eventInfo.id==null}"
+                        actionListener="#{scheduleManager.deleteCurrentEvent}"
+                        oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+</ui:composition>

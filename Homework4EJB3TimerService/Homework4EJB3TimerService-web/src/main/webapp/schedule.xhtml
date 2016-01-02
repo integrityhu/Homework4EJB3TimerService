@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+    <ui:include src="schedule_dialog.xhtml" />
+		<h1>Schedule</h1>
+		<pe:ajaxErrorHandler id="global" />
+		<p:growl id="growl" showSummary="true" showDetail="true" sticky="true" />
+
+		<h:form id="ScheduleForm">
+			<p:schedule locale="hu" id="schedule" name="schedule"
+				value="#{scheduleManager.eventModel}" timeZone="Europe/Budapest"
+				widgetVar="scheduleWidget" style="width:35%;">
+				<p:ajax event="dateSelect"
+					listener="#{scheduleManager.onDateSelect}"
+					update=":eventForm:eventDetails" oncomplete="PF('eventDialog').show()"
+					/> <!--  -->
+				<p:ajax event="eventSelect"
+					listener="#{scheduleManager.onEventSelect}"
+					/> <!-- update=":eventForm:eventDetails" oncomplete="PF('eventDialog').show()" -->
+				<p:ajax event="eventMove"
+					listener="#{schedulerManager.onEventMove}"
+					 /> <!-- update=":schedulerTable:messages" -->
+				<p:ajax event="eventResize"
+					listener="#{schedulerManager.onEventResize}"
+					/> <!-- update=":schedulerTable:messages"  -->
+			</p:schedule>
+		</h:form>
+	</ui:define>
+</ui:composition>
